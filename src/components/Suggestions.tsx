@@ -11,6 +11,7 @@ import type {
 import gemini from '@/gemini';
 import { generateGuid } from '@/utils/guuid';
 import { extractJsonFromString } from '@/utils/json';
+import Badge from './Badge';
 
 const SuggestionList: React.FC<{
   onChangeSuggestion: React.Dispatch<React.SetStateAction<string | null>>;
@@ -45,7 +46,7 @@ const SuggestionList: React.FC<{
   }, []);
 
   return (
-    <section style={{ display: 'flex', gap: 8 }}>
+    <section className='max-w-[75ch] grid grid-cols-3 grid-flow-row gap-2 mx-auto mt-8'>
       {suggestions.length
         ? suggestions.map((element, index) => (
             <SuggestionCard
@@ -66,37 +67,29 @@ const SuggestionCard: React.FC<SuggestionCardProps> = ({
   onChangeSuggestion,
 }) => {
   const { prompt_title, description, difficulty_level, text_type, id } = data;
+  const handleClickSuggestion = (id: string) =>
+    selectedSuggestion !== id
+      ? onChangeSuggestion(id)
+      : onChangeSuggestion(null);
+
   return (
     <div
       id={id}
-      style={{
-        border: `1px solid ${
-          selectedSuggestion === id ? '#7d45b4ff' : '#e8e8e8'
-        }`,
-        borderRadius: '8px',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'baseline',
-        padding: '16px',
-        gap: '6 px',
-      }}
-      onClick={() => onChangeSuggestion(id)}
+      className={`flex flex-col cursor-pointer rounded-md border p-3 gap-1.5 items-baseline transition duration-300 ${
+        selectedSuggestion === id
+          ? 'border-indigo-500 bg-white shadow-lg shadow-indigo-500/50'
+          : 'border-[#e8e8e8] bg-gray-50'
+      }`}
+      onClick={() => handleClickSuggestion(id)}
     >
-      <span
-        style={{
-          fontSize: '0.8rem',
-          backgroundColor: '#c9c9c9',
-          borderRadius: '16px',
-          padding: '2px 8px',
-          color: '#1b1b1b',
-          fontFamily: 'monospace',
-        }}
-      >
-        {text_type}
-      </span>
-      <h3>{prompt_title}</h3>
-      <span style={{ fontFamily: 'monospace' }}>{difficulty_level}</span>
-      <p style={{ maxWidth: '65ch', textAlign: 'left' }}>{description}</p>
+      <Badge difficulty_level={difficulty_level} />
+      {/* <span className='font-mono text-xs rounded-md bg-gray-200 py-0.5 px-2'>
+        {difficulty_level}
+      </span> */}
+      <h3 className='text-sm font-semibold'>{prompt_title}</h3>
+      <p className='max-w-[65ch] text-sm line-clamp-3' title={description}>
+        {description}
+      </p>
     </div>
   );
 };

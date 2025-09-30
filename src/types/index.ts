@@ -1,7 +1,7 @@
 export interface SuggestionProps {
   prompt_title: string;
   description: string;
-  difficulty_level: string; // Beginner | Beginner/Intermediate | Intermediate | Advanced |
+  difficulty_level: DifficultyLevel;
   text_type: string;
   id?: string;
 }
@@ -34,3 +34,5 @@ export interface AdditionalAnalysis {
   suggested_advanced_vocabulary: string[];
   overall_punctuation: number;
 }
+
+export type DifficultyLevel = 'beginner' | 'intermediate' | 'advanced';
